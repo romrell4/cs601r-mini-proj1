@@ -74,20 +74,19 @@ class AI(Player):
 
 
 if __name__ == '__main__':
+    def get_player(title):
+        print(title)
+        player_type = input("Type? (0 - AI; 1 - Human) ")
+        print("Great! You typed: '{}'".format(player_type))
+        player_name = input("Name? ")
+        if player_type == "0":
+            return AI(player_name)
+        else:
+            return Human(player_name)
+
     players = []
 
-    print("Player 1")
-    player_type = input("Type? (0 - AI; 1 - Human) ")
-    print("Great! You typed: '{}'".format(player_type))
-    player_name = input("Name? ")
-    if player_type == "0": players.append(AI(player_name))
-    else: players.append(Human(player_name))
-
-    print("Player 2")
-    player_type = input("Type? (0 - AI; 1 - Human) ")
-    print("Great! You typed: '{}'".format(player_type))
-    player_name =  input("Name? ")
-    if player_type == "0": players.append(AI(player_name))
-    else: players.append(Human(player_name))
+    players.append(get_player("Player 1"))
+    players.append(get_player("Player 2"))
 
     Game(players).start()
