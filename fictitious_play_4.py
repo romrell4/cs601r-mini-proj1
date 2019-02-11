@@ -83,9 +83,6 @@ if __name__ == '__main__':
         else:
             return Human(player_name)
 
-    players = []
-
-    players.append(get_player("Player 1"))
-    players.append(get_player("Player 2"))
+    players = [get_player("Player 1"), get_player("Player 2")]
 
     Game(players).start()
