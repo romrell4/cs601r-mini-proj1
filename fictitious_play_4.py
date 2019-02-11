@@ -77,7 +77,6 @@ if __name__ == '__main__':
     def get_player(title):
         print(title)
         player_type = input("Type? (0 - AI; 1 - Human) ")
-        print("Great! You typed: '{}'".format(player_type))
         player_name = input("Name? ")
         if player_type == "0":
             return AI(player_name)
