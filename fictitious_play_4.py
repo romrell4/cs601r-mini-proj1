@@ -78,12 +78,14 @@ if __name__ == '__main__':
 
     print("Player 1")
     player_type = input("Type? (0 - AI; 1 - Human) ")
+    print("Great! You typed: '{}'".format(player_type))
     player_name = input("Name? ")
     if player_type == "0": players.append(AI(player_name))
     else: players.append(Human(player_name))
 
     print("Player 2")
     player_type = input("Type? (0 - AI; 1 - Human) ")
+    print("Great! You typed: '{}'".format(player_type))
     player_name =  input("Name? ")
     if player_type == "0": players.append(AI(player_name))
     else: players.append(Human(player_name))
