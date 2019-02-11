@@ -67,8 +67,8 @@ class Human(Player):
 
 class AI(Player):
     def play(self, opponent):
-        guess = np.argmax(opponent.play_distribution)
-        play_index = int(np.argmax(Game.rewards[:, guess]))
+        play_rewards = Game.rewards.dot(opponent.play_distribution)
+        play_index = np.argmax(play_rewards)
         self.play_distribution[play_index] += 1
         return play_index
 
@@ -76,15 +76,15 @@ class AI(Player):
 if __name__ == '__main__':
     players = []
 
-    # print("Player 1")
-    player_type = "0" # input("Type? (0 - AI; 1 - Human) ")
-    player_name = "AI" # input("Name? ")
+    print("Player 1")
+    player_type = input("Type? (0 - AI; 1 - Human) ")
+    player_name = input("Name? ")
     if player_type == "0": players.append(AI(player_name))
     else: players.append(Human(player_name))
 
-    # print("Player 2")
-    player_type = "1" # input("Type? (0 - AI; 1 - Human) ")
-    player_name = "Human" # input("Name? ")
+    print("Player 2")
+    player_type = input("Type? (0 - AI; 1 - Human) ")
+    player_name =  input("Name? ")
     if player_type == "0": players.append(AI(player_name))
     else: players.append(Human(player_name))
 
