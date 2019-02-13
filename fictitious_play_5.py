@@ -3,11 +3,11 @@ import numpy as np
 class Game:
     states = ["Rock", "Paper", "Scissors", "Lizard", "Spock"]
     rewards = np.array([
-        [0, -1, 1, 1, -1],
-        [1, 0, -1, -1, 1],
-        [-1, 1, 0, 1, -1],
-        [-1, 1, -1, 0, 1],
-        [1, -1, 1, -1, 0]
+        [[0, 0], [0, 1], [1, 0], [1, 0], [0, 1]],
+        [[1, 0], [0, 0], [0, 1], [0, 1], [1, 0]],
+        [[0, 1], [1, 0], [0, 0], [1, 0], [0, 1]],
+        [[0, 1], [1, 0], [0, 1], [0, 0], [1, 0]],
+        [[1, 0], [0, 1], [1, 0], [0, 1], [0, 0]]
     ])
 
     def __init__(self, players):
@@ -22,14 +22,14 @@ class Game:
 
             print("{} played {}, {} played {}".format(self.player1.name, p1_state, self.player2.name, p2_state))
             reward = self.rewards[p1_index, p2_index]
-            if reward == 0:
+            if sum(reward) == 0:
                 print("It's a tie")
             else:
-                print("{} wins!".format((self.player1 if reward > 0 else self.player2).name))
-            self.player1.score += reward
-            self.player2.score -= reward
+                print("{} wins!".format((self.player1 if reward[0] > 0 else self.player2).name))
+            self.player1.score += reward[0]
+            self.player2.score += reward[1]
 
-        print("{} wins!".format(max([self.player1, self.player2], key = lambda p: p.score).name))
+        print("\n{} reached 10 points first! We have a winner!".format(max([self.player1, self.player2], key = lambda p: p.score).name))
 
 class Player:
     def __init__(self, name):
@@ -60,7 +60,7 @@ class Human(Player):
 
 class AI(Player):
     def play(self, opponent):
-        play_rewards = Game.rewards.dot(opponent.play_distribution)
+        play_rewards = Game.rewards[:,:,0].dot(opponent.play_distribution)
         play_index = np.argmax(play_rewards)
         self.play_distribution[play_index] += 1
         return play_index
