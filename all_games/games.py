@@ -4,7 +4,7 @@ class Game:
     name = "Un-named game"
     states = []
     rewards = np.array(0)
-    winning_score = 10
+    num_rounds = 10
 
     def __init__(self, players):
         for player in players:
@@ -12,15 +12,17 @@ class Game:
         self.player1, self.player2 = players
 
     def start(self):
-        print("Welcome to {}. The game is simple. Try to maximize your rewards and reach {} points. Here is the reward matrix:".format(self.name, self.winning_score))
+        print("Welcome to {}. The game is simple. Try to maximize your rewards during {} rounds. Here is the reward matrix:".format(self.name, self.num_rounds))
         matrix = [["", *self.states]]
         [matrix.append([state, *row]) for state, row in zip(self.states, self.rewards)]
         for row in matrix: print("".join([str(cell).rjust(10) for cell in row]))
 
-        while self.player1.score < self.winning_score and self.player2.score < self.winning_score:
+        for i in range(self.num_rounds):
             print("\n{} {}".format(self.player1, self.player2))
 
             p1_index, p2_index = self.player1.play(self.player2, self), self.player2.play(self.player1, self)
+            self.player1.play_history.append(p1_index)
+            self.player2.play_history.append(p2_index)
             p1_state, p2_state = [self.states[index] for index in [p1_index, p2_index]]
 
             print("{} played {}, {} played {}".format(self.player1.name, p1_state, self.player2.name, p2_state))
@@ -28,16 +30,15 @@ class Game:
             self.player1.score += reward[0]
             self.player2.score += reward[1]
 
-        print("\n{} reached 10 points first! We have a winner!".format(max([self.player1, self.player2], key = lambda p: p.score).name))
+        print("\nGame Over! Thanks for playing! Here are the scores:\n{} {}".format(self.player1, self.player2))
 
 class PrisonersDilemma(Game):
     name = "Prisoner's Dilemma"
     states = ["Cooperate", "Defect"]
     rewards = np.array([
         [[3, 3], [1, 4]],
-        [[4, 1], [1, 1]]
+        [[4, 1], [2, 2]]
     ])
-    winning_score = 10
 
 class RockPaperScissorsLizardSpock(Game):
     name = "Rock, Paper, Scissors, Lizard, Spock"
@@ -49,16 +50,19 @@ class RockPaperScissorsLizardSpock(Game):
         [[0, 1], [1, 0], [0, 1], [0, 0], [1, 0]],
         [[1, 0], [0, 1], [1, 0], [0, 1], [0, 0]]
     ])
-    winning_score = 10
 
 class MatchingPennies(Game):
     name = "Matching Pennies"
     states = ["Heads", "Tails"]
     rewards = np.array([
-        [[0, 0], [0, 1], [1, 0], [1, 0], [0, 1]],
-        [[1, 0], [0, 0], [0, 1], [0, 1], [1, 0]],
-        [[0, 1], [1, 0], [0, 0], [1, 0], [0, 1]],
-        [[0, 1], [1, 0], [0, 1], [0, 0], [1, 0]],
-        [[1, 0], [0, 1], [1, 0], [0, 1], [0, 0]]
+        [[1, 1], [-1, -1]],
+        [[-1, -1], [1, 1]]
     ])
-    winning_score = 10
+
+class Chicken(Game):
+    name = "Chicken"
+    states = ["Swerve", "Straight"]
+    rewards = np.array([
+        [[3, 3], [1, 4]],
+        [[4, 1], [0, 0]]
+    ])

@@ -1,21 +1,12 @@
 from all_games.games import *
-from all_games.players import AI, Human, Player
+from all_games.players import *
+from all_games.utils import get_choice
 
 if __name__ == '__main__':
-    def get_player(title):
-        print(title)
-        player_type = input("Type? (0 - AI; 1 - Human) ")
-        player_name = input("Name? ")
-        if player_type == "0":
-            return AI(player_name)
-        else:
-            return Human(player_name)
+    game = get_choice("Which game would you like to play?", [PrisonersDilemma, RockPaperScissorsLizardSpock, MatchingPennies, Chicken], lambda x: x.name)
 
-    print("Which game would you like to play?")
-    games = [PrisonersDilemma, RockPaperScissorsLizardSpock, MatchingPennies]
-    for index, game in enumerate(games):
-        print("\t{} - {}".format(index, game.name))
+    players = [Human, Random, FictitiousPlay, Godfather, SoftBully, Bully]
+    me = Human # get_choice("Who would you like to be?", players, lambda x: x.title)
+    opponent = get_choice("Who would you like to play against?", players, lambda x: x.title)
 
-    game = games[int(input())]
-
-    game([get_player("Player 1"), get_player("Player 2")]).start()
+    game([opponent("AI"), me("Eric")]).start()
