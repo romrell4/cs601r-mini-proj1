@@ -1,7 +1,7 @@
 import numpy as np
 
 class Game:
-    name = "Un-named game"
+    name = None
     states = []
     rewards = np.array(0)
     num_rounds = 10
