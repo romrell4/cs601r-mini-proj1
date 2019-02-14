@@ -27,7 +27,7 @@ class Random(Player):
     title = "Random"
 
     def play(self, opponent, game):
-        return np.random.randint(0, len(game.states) - 1)
+        return np.random.randint(0, len(game.states))
 
 class FictitiousPlay(Player):
     title = "Fictitious Play"
@@ -40,36 +40,45 @@ class FictitiousPlay(Player):
         play_index = np.argmax(play_rewards)
         return play_index
 
-class Godfather(Player):
+class Leader(Player):
+    def __init__(self, name, offer, punishment):
+        super().__init__(name)
+        self.offer = offer
+        self.punishment = punishment
+        self.current_punishment = []
+
+    def play(self, opponent, game):
+        # If they reject the offer, extend their punishment
+        if len(self.play_history) > 0 and opponent.play_history[-1] != self.offer[0]:
+            self.current_punishment = self.punishment[:]
+
+        if len(self.current_punishment) > 0:
+            return self.current_punishment.pop()
+        else:
+            result = self.offer[1]
+            if type(result) is int:
+                return result
+            elif type(result) is list:
+                return np.random.choice(range(len(result)), p = result)
+            else:
+                raise Exception("Invalid offer!")
+
+class Godfather(Leader):
     title = "Godfather"
-    offer = [0, 0]
-    punishment = 1
 
-    def play(self, opponent, game):
-        if len(self.play_history) == 0 or opponent.play_history[-1] == self.offer[0]:
-            return self.offer[1]
-        else:
-            return self.punishment
+    def __init__(self, name):
+        super().__init__(name, [0, 0], [1, 1, 1])
 
-class SoftBully(Player):
+class SoftBully(Leader):
     title = "Soft Bully"
-    offer = [0, [.75, .25]]
-    punishment = 1
 
-    def play(self, opponent, game):
-        if len(self.play_history) == 0 or opponent.play_history[-1] == self.offer[0]:
-            return np.random.choice([0, 1], p = self.offer[1])
-        else:
-            return self.punishment
+    def __init__(self, name):
+        super().__init__(name, [0, [.75, .25]], [1, 1, 1])
 
-
-class Bully(Player):
+class Bully(Leader):
     title = "Bully"
     offer = [0, 1]
     punishment = 1
 
-    def play(self, opponent, game):
-        if len(self.play_history) == 0 or opponent.play_history[-1] == self.offer[0]:
-            return self.offer[1]
-        else:
-            return self.punishment
+    def __init__(self, name):
+        super().__init__(name, [0, 1], [1, 1, 1])
